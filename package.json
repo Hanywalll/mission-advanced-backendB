@@ -1,0 +1,40 @@
+{
+  "name": "mission-advanced-backendb",
+  "version": "1.0.0",
+  "description": "Mission Advanced Backend B - Chill Movie App REST API (Authentication, Middleware, Query Params Filter/Sort/Search, Send Email Verification, Upload Image)",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "db:init": "node src/database/init.js"
+  },
+  "keywords": [
+    "nodejs",
+    "expressjs",
+    "mysql",
+    "authentication",
+    "bcrypt",
+    "jsonwebtoken",
+    "nodemailer",
+    "uuid",
+    "multer",
+    "chill-movie-app"
+  ],
+  "author": "Muhammad Burhanudin",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.2",
+    "mysql2": "^3.22.0",
+    "nodemailer": "^7.0.10",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

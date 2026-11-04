@@ -1,0 +1,260 @@
+{
+  "info": {
+    "name": "Mission Advanced Backend B - Chill Movie App API",
+    "description": "Koleksi pengujian REST API menggunakan Node.js, Express.js, MySQL, Bcrypt, JWT Middleware, Query Params (Filter, Sort, Search), Nodemailer + UUID (Email Verification), dan Multer (Upload Image).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "verificationToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. POST Register User (/register)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "try {",
+              "  const res = pm.response.json();",
+              "  if (res.verificationToken) {",
+              "    pm.collectionVariables.set('verificationToken', res.verificationToken);",
+              "  }",
+              "} catch (e) {}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"fullname\": \"Muhammad Burhanudin\",\n  \"username\": \"burhanudin\",\n  \"email\": \"burhanudin@chillmovie.com\",\n  \"password\": \"Rahasia123!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/register",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "register"
+          ]
+        },
+        "description": "Mendaftarkan user baru dengan enkripsi password menggunakan bcrypt, membuat unique token verifikasi dengan uuid, menyimpan ke database melalui perintah INSERT, dan mengirim email verifikasi menggunakan nodemailer."
+      }
+    },
+    {
+      "name": "2. GET Verify Email (/verify-email)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/verify-email?token={{verificationToken}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "verify-email"
+          ],
+          "query": [
+            {
+              "key": "token",
+              "value": "{{verificationToken}}"
+            }
+          ]
+        },
+        "description": "Memverifikasi akun pengguna menggunakan token unik yang dikirimkan melalui email."
+      }
+    },
+    {
+      "name": "3. POST Login User (/login)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "try {",
+              "  const res = pm.response.json();",
+              "  if (res.token) {",
+              "    pm.collectionVariables.set('authToken', res.token);",
+              "  }",
+              "} catch (e) {}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"burhanudin@chillmovie.com\",\n  \"password\": \"Rahasia123!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/login",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "login"
+          ]
+        },
+        "description": "Melakukan autentikasi login menggunakan email dan password (bcrypt.compare) serta menghasilkan JWT token (jsonwebtoken)."
+      }
+    },
+    {
+      "name": "4. GET Movies with Query Params - Filter, Sort, Search (/movie)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/movie?genre=Action&sortBy=rating&order=DESC&search=Spider",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "movie"
+          ],
+          "query": [
+            {
+              "key": "genre",
+              "value": "Action",
+              "description": "Filter berdasarkan kategori genre (WHERE)"
+            },
+            {
+              "key": "sortBy",
+              "value": "rating",
+              "description": "Field pengurutan data (ORDER BY: id, title, rating, release_year, genre)"
+            },
+            {
+              "key": "order",
+              "value": "DESC",
+              "description": "Arah pengurutan (ASC / DESC)"
+            },
+            {
+              "key": "search",
+              "value": "Spider",
+              "description": "Pencarian kata kunci judul/sinopsis (WHERE ... LIKE)"
+            }
+          ]
+        },
+        "description": "Mengambil daftar movie menggunakan middleware autentikasi JWT dan mendukung query params: genre (filter WHERE), sortBy (ORDER BY), dan search (WHERE LIKE)."
+      }
+    },
+    {
+      "name": "5. GET All Movies (/movies)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/movies",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "movies"
+          ]
+        },
+        "description": "Mengambil seluruh daftar movie yang dilindungi oleh authMiddleware.verifyToken."
+      }
+    },
+    {
+      "name": "6. POST Upload Image (/upload)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "src": [],
+              "description": "Pilih file gambar (JPG/PNG/WEBP) untuk diunggah ke folder /upload"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/upload",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "upload"
+          ]
+        },
+        "description": "Mengunggah file gambar ke dalam folder /upload menggunakan middleware Multer."
+      }
+    },
+    {
+      "name": "7. POST Add New Movie (/movie)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Interstellar\",\n  \"slug\": \"interstellar\",\n  \"synopsis\": \"Tim penjelajah melakukan perjalanan melalui lubang cacing di luar angkasa dalam upaya untuk memastikan kelangsungan hidup umat manusia.\",\n  \"genre\": \"Sci-Fi\",\n  \"type\": \"movie\",\n  \"release_year\": 2014,\n  \"age_rating\": \"13+\",\n  \"poster_url\": \"https://images.chill.com/posters/interstellar.jpg\",\n  \"trailer_url\": \"https://videos.chill.com/trailers/interstellar.mp4\",\n  \"rating\": 4.9,\n  \"is_premium\": true,\n  \"is_published\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/movie",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "movie"
+          ]
+        },
+        "description": "Menambahkan data movie baru menggunakan service INSERT."
+      }
+    }
+  ]
+}
