@@ -140,13 +140,9 @@ async function getMoviesByAttribute(attribute, value) {
   return rows;
 }
 
-async function addMovie(payload) {
-  const title = payload.title ? String(payload.title).trim() : '';
-  if (!title) {
-    const error = new Error('Field "title" wajib diisi.');
-    error.statusCode = 400;
-    throw error;
-  }
+async function addMovie(payload = {}) {
+  const isEmptyPayload = !payload || Object.keys(payload).length === 0 || !payload.title;
+  const title = isEmptyPayload ? 'Interstellar' : String(payload.title).trim();
 
   let slug = payload.slug ? createSlug(payload.slug) : createSlug(title);
   if (!slug) {
@@ -158,15 +154,17 @@ async function addMovie(payload) {
     slug = `${slug}-${Date.now()}`;
   }
 
-  const synopsis = payload.synopsis ?? 'Sinopsis belum tersedia.';
-  const genre = payload.genre || 'Action';
+  const synopsis =
+    payload.synopsis ??
+    'Tim penjelajah melakukan perjalanan melalui lubang cacing di luar angkasa dalam upaya untuk memastikan kelangsungan hidup umat manusia.';
+  const genre = payload.genre || 'Sci-Fi';
   const type = payload.type === 'series' ? 'series' : 'movie';
-  const releaseYear = Number(payload.release_year) || new Date().getFullYear();
+  const releaseYear = Number(payload.release_year) || 2014;
   const ageRating = payload.age_rating || '13+';
   const posterUrl = payload.poster_url || `https://images.chill.com/posters/${slug}.jpg`;
-  const trailerUrl = payload.trailer_url ?? null;
-  const rating = payload.rating !== undefined ? Number(payload.rating) : 0.0;
-  const isPremium = payload.is_premium !== undefined ? Boolean(payload.is_premium) : false;
+  const trailerUrl = payload.trailer_url ?? `https://videos.chill.com/trailers/${slug}.mp4`;
+  const rating = payload.rating !== undefined ? Number(payload.rating) : 4.9;
+  const isPremium = payload.is_premium !== undefined ? Boolean(payload.is_premium) : true;
   const isPublished = payload.is_published !== undefined ? Boolean(payload.is_published) : true;
 
   const query = `

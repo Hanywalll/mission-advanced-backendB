@@ -4,7 +4,8 @@ const uploadController = require('../controllers/uploadController');
 
 const router = express.Router();
 
-// Langkah Ketujuh: Endpoint /upload untuk mengunggah gambar menggunakan service multer
+// Langkah Ketujuh: Endpoint /upload untuk mengunggah gambar menggunakan service multer (mendukung POST & GET langsung)
 router.post('/upload', uploadService.uploadImageMiddleware, uploadController.uploadImage);
+router.get('/upload', uploadController.uploadImage);
 
 module.exports = router;
