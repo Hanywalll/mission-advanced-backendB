@@ -6,7 +6,7 @@ function uploadImage(req, res) {
     });
   }
 
-  const appUrl = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
+  const appUrl = process.env.APP_URL || `http://localhost:${process.env.PORT || 3001}`;
   const fileUrl = `${appUrl}/upload/${req.file.filename}`;
 
   return res.status(201).json({

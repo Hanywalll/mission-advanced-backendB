@@ -200,7 +200,7 @@ Pada `src/services/movieService.js` (`getAllMovies` / `getList`):
 
 Contoh URL:
 ```http
-GET http://localhost:3000/movie?genre=Action&sortBy=rating&order=DESC&search=Spider
+GET http://localhost:3001/movie?genre=Action&sortBy=rating&order=DESC&search=Spider
 Authorization: Bearer <jwt_token>
 ```
 
@@ -258,4 +258,4 @@ Authorization: Bearer <jwt_token>
    # atau mode development:
    npm run dev
    ```
-   Server berjalan di `http://localhost:3000`.
+   Server berjalan di `http://localhost:3001`.

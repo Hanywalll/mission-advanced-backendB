@@ -45,7 +45,7 @@ async function createTransporter() {
  * Langkah Keenam: Function sendmail untuk mengirim token verifikasi via nodemailer
  */
 async function sendmail(toEmail, token, fullname = 'Pengguna') {
-  const appUrl = process.env.APP_URL || `http://localhost:${process.env.PORT || 3000}`;
+  const appUrl = process.env.APP_URL || `http://localhost:${process.env.PORT || 3001}`;
   const verificationUrl = `${appUrl}/verify-email?token=${token}`;
   const fromAddress = process.env.SMTP_FROM || '"Chill Movie App" <no-reply@chillmovie.com>';
 

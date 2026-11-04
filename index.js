@@ -3,7 +3,7 @@ const app = require('./src/app');
 const { testConnection, dbConfig } = require('./src/config/database');
 const { initDatabase } = require('./src/database/init');
 
-const PORT = Number(process.env.PORT) || 3000;
+const PORT = Number(process.env.PORT) || 3001;
 
 async function startServer() {
   try {
